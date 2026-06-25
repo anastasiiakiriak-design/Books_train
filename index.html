@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Топ‑10 книг 2025 года — рейтинг по продажам</title>
+<style>
+  :root{
+    /* Мятно-шоколадная палитра */
+    --choc-dark:#2a1c15;
+    --choc:#4a3022;
+    --choc-soft:#6b4a32;
+    --mint:#7fd1bd;
+    --mint-deep:#3fae97;
+    --mint-pale:#d8f3ea;
+    --cream:#f6efe2;
+    --gold:#e2c389;
+    --ink:#34261d;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:"Segoe UI",Georgia,"Times New Roman",serif;
+    color:var(--cream);
+    min-height:100vh;line-height:1.5;position:relative;overflow-x:hidden;
+  }
+
+  /* ===== Фон: книжные полки (нарисованы на CSS) ===== */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;background-color:#211109;
+    background-image:
+      repeating-linear-gradient(180deg,
+        transparent 0 170px, rgba(0,0,0,.5) 170px 174px,
+        #855736 174px 190px, #5e3c22 190px 198px,
+        rgba(0,0,0,.4) 198px 204px, transparent 204px 210px),
+      repeating-linear-gradient(90deg,
+        rgba(255,255,255,.07) 0 3px, transparent 3px 34px, rgba(0,0,0,.18) 34px 37px),
+      repeating-linear-gradient(90deg,
+        #3a8a7a 0 32px, #20403a 32px 35px,
+        #c8a96a 35px 70px, #20403a 70px 73px,
+        #7b4a30 73px 112px, #20403a 112px 115px,
+        #5fb0a3 115px 150px, #20403a 150px 153px,
+        #9c6b45 153px 196px, #20403a 196px 199px,
+        #2f6f63 199px 234px, #20403a 234px 238px,
+        #b7894f 238px 272px, #20403a 272px 275px);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:-1;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(63,174,151,.18), transparent 60%),
+      linear-gradient(180deg, rgba(20,11,7,.62), rgba(20,11,7,.82));
+  }
+
+  /* ===== Шапка ===== */
+  header{text-align:center;padding:48px 20px 30px}
+  .eyebrow{
+    display:inline-block;letter-spacing:.28em;text-transform:uppercase;font-size:.72rem;
+    color:var(--mint);background:rgba(42,28,21,.55);border:1px solid rgba(127,209,189,.35);
+    padding:6px 16px;border-radius:999px;margin-bottom:18px;
+  }
+  h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;color:var(--cream);text-shadow:0 2px 12px rgba(0,0,0,.6)}
+  h1 .accent{color:var(--mint)}
+  .subtitle{max-width:640px;margin:16px auto 0;color:#e8ddca;font-size:1rem;opacity:.9}
+  .hint-line{
+    max-width:660px;margin:14px auto 0;font-size:.85rem;color:var(--mint-pale);
+    background:rgba(42,28,21,.5);border:1px dashed rgba(127,209,189,.4);
+    border-radius:12px;padding:9px 14px;
+  }
+  .hint-line b{color:var(--mint)}
+
+  /* ===== Анимация перелистывания страниц ===== */
+  .flip-scene{display:flex;justify-content:center;margin:34px 0 8px;perspective:1400px}
+  .flip-book{position:relative;width:250px;height:168px;transform:rotateX(8deg)}
+  .cover{position:absolute;top:0;width:124px;height:168px;
+    background:linear-gradient(160deg,var(--choc-soft),var(--choc-dark));box-shadow:0 18px 30px rgba(0,0,0,.55)}
+  .cover.left{left:0;border-radius:10px 4px 4px 10px;border-right:2px solid #1c120c}
+  .cover.right{right:0;border-radius:4px 10px 10px 4px;border-left:2px solid #1c120c}
+  .stack{position:absolute;top:8px;width:108px;height:152px;background:linear-gradient(var(--cream),#e6dcc6)}
+  .stack.left{left:10px;border-radius:6px 2px 2px 6px;box-shadow:inset -6px 0 10px rgba(0,0,0,.12)}
+  .stack.right{right:10px;border-radius:2px 6px 6px 2px;box-shadow:inset 6px 0 10px rgba(0,0,0,.12)}
+  .page{
+    position:absolute;top:8px;left:125px;width:107px;height:152px;transform-origin:left center;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 16px, rgba(91,74,50,.28) 16px 17px),
+      linear-gradient(120deg,#fbf6ec,#ece0c8);
+    border-radius:2px 7px 7px 2px;box-shadow:0 8px 16px rgba(0,0,0,.35);
+    backface-visibility:hidden;animation:turn 4.8s infinite ease-in-out;opacity:0;
+  }
+  .page::after{content:"";position:absolute;top:18px;left:12px;width:46%;height:5px;border-radius:3px;background:var(--mint-deep);opacity:.5}
+  .page:nth-child(5){animation-delay:0s}
+  .page:nth-child(6){animation-delay:-.96s}
+  .page:nth-child(7){animation-delay:-1.92s}
+  .page:nth-child(8){animation-delay:-2.88s}
+  .page:nth-child(9){animation-delay:-3.84s}
+  @keyframes turn{
+    0%{transform:rotateY(0deg);opacity:0}8%{opacity:1}
+    50%{transform:rotateY(-168deg);opacity:1}58%{opacity:0}
+    100%{transform:rotateY(-168deg);opacity:0}
+  }
+
+  /* ===== Список книг ===== */
+  main{max-width:900px;margin:10px auto 60px;padding:0 18px}
+  .book{
+    display:grid;grid-template-columns:84px 1fr 72px;gap:18px;align-items:center;
+    background:linear-gradient(135deg, rgba(58,38,27,.86), rgba(34,22,16,.9));
+    border:1px solid rgba(127,209,189,.22);border-radius:16px;padding:18px 22px;margin-bottom:16px;
+    backdrop-filter:blur(6px);box-shadow:0 12px 26px rgba(0,0,0,.35);
+    opacity:0;transform:translateY(22px);animation:rise .6s forwards ease-out;
+  }
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  .book:nth-child(1){animation-delay:.05s}.book:nth-child(2){animation-delay:.1s}
+  .book:nth-child(3){animation-delay:.15s}.book:nth-child(4){animation-delay:.2s}
+  .book:nth-child(5){animation-delay:.25s}.book:nth-child(6){animation-delay:.3s}
+  .book:nth-child(7){animation-delay:.35s}.book:nth-child(8){animation-delay:.4s}
+  .book:nth-child(9){animation-delay:.45s}.book:nth-child(10){animation-delay:.5s}
+
+  .rank{
+    width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:1.9rem;font-weight:800;color:var(--mint-pale);
+    background:radial-gradient(circle at 32% 28%, var(--mint-deep), #1f5d51);
+    border:3px solid rgba(216,243,234,.35);box-shadow:0 6px 14px rgba(0,0,0,.4);
+  }
+  .info{min-width:0}
+  .title{
+    font-size:1.22rem;font-weight:700;color:var(--cream);cursor:pointer;
+    display:inline;border-bottom:1px dotted transparent;transition:.15s;
+  }
+  .title:hover,.title:focus{color:var(--mint-pale);border-bottom-color:var(--mint);outline:none}
+  .title .tag-buy{font-size:.7rem;color:var(--gold);margin-left:7px;white-space:nowrap;opacity:.85}
+  .by{
+    color:var(--mint);font-style:italic;font-size:.95rem;margin-top:3px;cursor:pointer;
+    display:inline-block;border-bottom:1px dotted transparent;transition:.15s;
+  }
+  .by:hover,.by:focus{color:var(--mint-pale);border-bottom-color:var(--mint);outline:none}
+  .by .who{font-style:normal;opacity:.7;font-size:.78rem;margin-left:5px}
+  .genre{
+    display:inline-block;margin-top:8px;font-size:.72rem;letter-spacing:.04em;color:#f1e7d4;
+    background:rgba(107,74,50,.6);border:1px solid rgba(226,195,137,.4);padding:3px 10px;border-radius:999px;
+  }
+  .sales{margin-top:12px}
+  .sales-row{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;color:#d9cdb6}
+  .copies{font-weight:700;color:var(--mint);font-size:1.05rem}
+  .bar{height:9px;margin-top:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .bar > span{
+    display:block;height:100%;border-radius:999px;
+    background:linear-gradient(90deg,var(--mint-deep),var(--mint));
+    box-shadow:0 0 10px rgba(127,209,189,.5);width:0;animation:fill 1.4s forwards cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes fill{to{width:var(--w)}}
+
+  /* ===== Миниатюра обложки (справа) ===== */
+  .thumb{
+    width:64px;height:96px;border-radius:5px;cursor:pointer;justify-self:end;position:relative;
+    box-shadow:0 6px 14px rgba(0,0,0,.5);transition:transform .18s, box-shadow .18s;overflow:hidden;
+    background:#1c120c;
+  }
+  .thumb:hover{transform:translateY(-3px) rotate(-2deg) scale(1.05);box-shadow:0 12px 22px rgba(0,0,0,.6)}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb::before{ /* «корешок» книги */
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:linear-gradient(rgba(255,255,255,.25),rgba(0,0,0,.25));z-index:2;
+  }
+  .cover-fallback{
+    width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
+    padding:8px 6px 7px;text-align:center;
+    background:linear-gradient(150deg,var(--mint-deep),var(--choc));
+  }
+  .cf-title{font-size:.5rem;font-weight:700;color:#fff;line-height:1.15;
+    display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .cf-author{font-size:.42rem;color:var(--mint-pale);font-style:italic}
+
+  /* Подсветка лидера */
+  .book.top{border-color:rgba(226,195,137,.6);
+    background:linear-gradient(135deg, rgba(74,48,34,.92), rgba(42,28,21,.95));
+    box-shadow:0 0 0 1px rgba(226,195,137,.25),0 16px 34px rgba(0,0,0,.45)}
+  .book.top .rank{background:radial-gradient(circle at 32% 28%, var(--gold), #9c7430);color:#2a1c15;border-color:rgba(246,239,226,.6)}
+  .medal{font-size:.8rem;margin-left:6px}
+
+  /* ===== Модальное окно ===== */
+  .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px;
+    background:rgba(15,8,5,.72);backdrop-filter:blur(4px);animation:fade .2s ease}
+  .modal[hidden]{display:none}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal-card{
+    position:relative;width:min(460px,94vw);max-height:88vh;overflow:auto;
+    background:linear-gradient(150deg, rgba(74,48,34,.98), rgba(34,22,16,.99));
+    border:1px solid rgba(127,209,189,.4);border-radius:18px;padding:26px 24px 24px;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);animation:pop .22s ease;
+  }
+  @keyframes pop{from{transform:translateY(18px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+  .modal-close{
+    position:absolute;top:12px;right:14px;width:34px;height:34px;border:none;border-radius:50%;
+    background:rgba(127,209,189,.15);color:var(--mint-pale);font-size:1.3rem;cursor:pointer;line-height:1;
+  }
+  .modal-close:hover{background:rgba(127,209,189,.3)}
+  .m-kind{letter-spacing:.2em;text-transform:uppercase;font-size:.68rem;color:var(--mint);margin-bottom:6px}
+  .m-name{font-size:1.5rem;color:var(--cream);margin-bottom:4px;padding-right:30px}
+  .m-sub{color:var(--mint);font-style:italic;font-size:.95rem;margin-bottom:14px}
+  .m-bio{color:#ecdfca;font-size:.95rem;margin-bottom:16px}
+  .m-h{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .m-works{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+  .m-works li{background:rgba(127,209,189,.12);border:1px solid rgba(127,209,189,.3);
+    color:var(--mint-pale);font-size:.82rem;padding:5px 11px;border-radius:999px}
+  .m-top{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+  .m-cover{width:84px;height:126px;border-radius:6px;overflow:hidden;flex:none;box-shadow:0 8px 18px rgba(0,0,0,.5);background:#1c120c}
+  .m-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .shops{display:flex;flex-direction:column;gap:10px}
+  .shop{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;
+    background:linear-gradient(90deg, rgba(63,174,151,.22), rgba(63,174,151,.08));
+    border:1px solid rgba(127,209,189,.4);border-radius:12px;padding:12px 16px;
+    color:var(--cream);font-size:1rem;font-weight:600;transition:.15s;
+  }
+  .shop:hover{background:linear-gradient(90deg, rgba(63,174,151,.4), rgba(63,174,151,.15));transform:translateX(3px)}
+  .shop .go{color:var(--mint);font-size:.85rem;font-weight:400}
+  .m-note{margin-top:14px;font-size:.74rem;color:#bdae95;text-align:center}
+
+  /* ===== Подвал ===== */
+  footer{text-align:center;padding:26px 18px 50px;color:#cdbfa6;font-size:.82rem;max-width:760px;margin:0 auto}
+  footer a{color:var(--mint);text-decoration:none;border-bottom:1px dotted var(--mint)}
+  footer a:hover{color:var(--mint-pale)}
+  .ribbon{color:var(--gold);letter-spacing:.06em}
+
+  @media (max-width:520px){
+    .book{grid-template-columns:54px 1fr 56px;gap:12px;padding:14px}
+    .rank{width:50px;height:50px;font-size:1.3rem}
+    .thumb{width:52px;height:78px}
+    .title .tag-buy{display:none}
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <span class="eyebrow">Read-only · рейтинг 2025</span>
+    <h1>Топ‑<span class="accent">10</span> книг <span class="accent">2025</span> года</h1>
+    <p class="subtitle">
+      Самые продаваемые книги года по числу проданных экземпляров (США, данные Circana&nbsp;BookScan).
+      <strong>№1 — лучший результат, №10 — самый низкий.</strong>
+    </p>
+    <p class="hint-line">
+      💡 Нажмите на <b>имя автора</b> — краткая биография и другие работы ·
+      на <b>название</b> или <b>обложку</b> — где купить книгу.
+    </p>
+
+    <div class="flip-scene" aria-hidden="true">
+      <div class="flip-book">
+        <div class="cover left"></div><div class="cover right"></div>
+        <div class="stack left"></div><div class="stack right"></div>
+        <div class="page"></div><div class="page"></div><div class="page"></div>
+        <div class="page"></div><div class="page"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="list"></main>
+
+  <footer>
+    <p class="ribbon">★ Рейтинг по продажам печатных книг за полный 2025 год ★</p>
+    <p style="margin-top:8px">
+      Источники: данные
+      <a href="https://www.publishersweekly.com/pw/by-topic/industry-news/financial-reporting/article/99417-print-book-sales-rose-slightly-in-2025.html" target="_blank" rel="noopener">Publishers&nbsp;Weekly</a>
+      по
+      <a href="https://www.circana.com/post/top-10-books" target="_blank" rel="noopener">Circana&nbsp;BookScan</a>.
+      Обложки — <a href="https://openlibrary.org" target="_blank" rel="noopener">Open&nbsp;Library</a>.
+    </p>
+  </footer>
+
+  <!-- Модальное окно -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose" aria-label="Закрыть">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+<script>
+  // ===== Данные авторов =====
+  const authors = {
+    "Mel Robbins":{bio:"Американский мотивационный спикер, бывший адвокат и ведущая одного из самых популярных в мире подкастов о саморазвитии. Известна простыми «инструментами» против прокрастинации и тревоги.",
+      works:["The 5 Second Rule","The High 5 Habit","The Mel Robbins Podcast"]},
+    "Suzanne Collins":{bio:"Американская писательница и сценаристка. Мировую славу принесла антиутопическая серия «Голодные игры», экранизированная в серию блокбастеров.",
+      works:["Голодные игры","И вспыхнет пламя","Сойка-пересмешница","Баллада о змеях и певчих птицах","Хроники Подземья"]},
+    "Rebecca Yarros":{bio:"Американская писательница, автор бестселлеров №1 по версии NYT. Создательница популярной серии романтического фэнтези «Empyrean» о всадниках драконов.",
+      works:["Fourth Wing","Iron Flame","Onyx Storm","The Last Letter","In the Likely Event"]},
+    "Freida McFadden":{bio:"Американская писательница и практикующий врач-невролог. Пишет затягивающие психологические триллеры с неожиданными развязками.",
+      works:["Серия «The Housemaid»","The Coworker","Never Lie","The Inmate","The Teacher","The Crash"]},
+    "Jeff Kinney":{bio:"Американский писатель, карикатурист и геймдизайнер. Создатель всемирно популярной детской серии «Дневник слабака».",
+      works:["Дневник слабака (вся серия)","Rowley Jefferson’s Awesome Friendly Adventure","Awesome Friendly Kid"]},
+    "Dav Pilkey":{bio:"Американский автор и иллюстратор детских книг и комиксов. Придумал «Капитана Подштанника», «Dog Man» и «Cat Kid Comic Club».",
+      works:["Серия «Dog Man»","Captain Underpants (Капитан Подштанник)","Cat Kid Comic Club"]},
+    "James Clear":{bio:"Американский автор и спикер, эксперт по привычкам, формированию поведения и продуктивности. Ведёт популярную рассылку «3-2-1».",
+      works:["Atomic Habits (Атомные привычки)","Рассылка «3-2-1 Newsletter»"]},
+    "Dan Brown":{bio:"Американский писатель, мастер интеллектуальных триллеров. Самый известный его герой — профессор-символог Роберт Лэнгдон.",
+      works:["Код да Винчи","Ангелы и демоны","Утраченный символ","Инферно","Происхождение","Цифровая крепость"]},
+  };
+
+  // ===== Топ-10 за полный 2025 год (Circana BookScan / Publishers Weekly) =====
+  const books = [
+    {rank:1, title:"The Let Them Theory", author:"Mel Robbins", genre:"Саморазвитие · нон-фикшн", copies:2812799, isbn:"9781401971366", asin:"1401971369"},
+    {rank:2, title:"Sunrise on the Reaping", author:"Suzanne Collins", genre:"Young adult · приквел «Голодных игр»", copies:2000856, isbn:"9781546171461", asin:"1546171460"},
+    {rank:3, title:"Onyx Storm (Wing and Claw)", author:"Rebecca Yarros", genre:"Романтическое фэнтези", copies:1699963, isbn:"9781649374189", asin:"1649374186"},
+    {rank:4, title:"The Housemaid", author:"Freida McFadden", genre:"Психологический триллер", copies:822261, isbn:"9781538742570", asin:"1538742578"},
+    {rank:5, title:"Partypooper (Diary of a Wimpy Kid #20)", author:"Jeff Kinney", genre:"Детская · юмор", copies:817430, isbn:"9781419782695", asin:"141978269X"},
+    {rank:6, title:"Dog Man: Big Jim Believes (#14)", author:"Dav Pilkey", genre:"Детский комикс", copies:767342, isbn:"9781546176183", asin:"1546176187"},
+    {rank:7, title:"Atomic Habits", author:"James Clear", genre:"Саморазвитие · нон-фикшн", copies:742090, isbn:"9780735211292", asin:"0735211299"},
+    {rank:8, title:"Dog Man: Big Jim Begins (#13)", author:"Dav Pilkey", genre:"Детский комикс", copies:681041, isbn:"9781338896459", asin:"1338896458"},
+    {rank:9, title:"The Secret of Secrets", author:"Dan Brown", genre:"Триллер", copies:653505, isbn:"9780385546898", asin:"0385546890"},
+    {rank:10, title:"Fourth Wing", author:"Rebecca Yarros", genre:"Романтическое фэнтези", copies:623226, isbn:"9781649374042", asin:"1649374046"},
+  ];
+
+  const max = Math.max(...books.map(b => b.copies));
+  const nf = new Intl.NumberFormat("ru-RU");
+  const medals = {1:"🥇",2:"🥈",3:"🥉"};
+  const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const coverURL = isbn => `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg?default=false`;
+
+  // ===== Рендер списка =====
+  document.getElementById("list").innerHTML = books.map((b,i) => {
+    const pct = (b.copies / max * 100).toFixed(1);
+    const medal = medals[b.rank] ? `<span class="medal">${medals[b.rank]}</span>` : "";
+    return `
+      <article class="book ${b.rank===1 ? "top":""}">
+        <div class="rank">${b.rank}</div>
+        <div class="info">
+          <div>
+            <span class="title" role="button" tabindex="0" data-buy="${i}">${esc(b.title)}${medal}<span class="tag-buy">🛒 где купить</span></span>
+          </div>
+          <span class="by" role="button" tabindex="0" data-author="${esc(b.author)}">${esc(b.author)}<span class="who">ⓘ об авторе</span></span>
+          <div><span class="genre">${b.genre}</span></div>
+          <div class="sales">
+            <div class="sales-row"><span>Продано экземпляров</span><span class="copies">${nf.format(b.copies)}</span></div>
+            <div class="bar"><span style="--w:${pct}%"></span></div>
+          </div>
+        </div>
+        <div class="thumb" role="button" tabindex="0" data-buy="${i}" title="Где купить «${esc(b.title)}»">
+          <img src="${coverURL(b.isbn)}" alt="Обложка: ${esc(b.title)}" data-title="${esc(b.title)}" data-author="${esc(b.author)}" loading="lazy">
+        </div>
+      </article>`;
+  }).join("");
+
+  // Запасная обложка, если картинка не загрузилась
+  function fallbackCover(img){
+    const d=document.createElement("div");
+    d.className="cover-fallback";
+    d.innerHTML=`<span class="cf-title">${esc(img.dataset.title)}</span><span class="cf-author">${esc(img.dataset.author)}</span>`;
+    img.replaceWith(d);
+  }
+  document.querySelectorAll(".thumb img").forEach(img=>{
+    img.addEventListener("error",()=>fallbackCover(img));
+  });
+
+  // ===== Модальные окна =====
+  const modal=document.getElementById("modal"), body=document.getElementById("modalBody");
+  function openModal(html){ body.innerHTML=html; modal.hidden=false; }
+  function closeModal(){ modal.hidden=true; body.innerHTML=""; }
+  document.getElementById("modalClose").addEventListener("click",closeModal);
+  modal.addEventListener("click",e=>{ if(e.target===modal) closeModal(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeModal(); });
+
+  function showAuthor(name){
+    const a=authors[name]; if(!a) return;
+    openModal(`
+      <div class="m-kind">Об авторе</div>
+      <div class="m-name">${esc(name)}</div>
+      <p class="m-bio">${esc(a.bio)}</p>
+      <div class="m-h">Другие работы</div>
+      <ul class="m-works">${a.works.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>
+    `);
+  }
+
+  function showBuy(i){
+    const b=books[i];
+    const amazon=`https://www.amazon.com/dp/${b.asin}`;
+    const bn=`https://www.barnesandnoble.com/s/${b.isbn}`;
+    const bookshop=`https://bookshop.org/search?keywords=${b.isbn}`;
+    openModal(`
+      <div class="m-kind">Где купить</div>
+      <div class="m-top">
+        <div class="m-cover"><img src="${coverURL(b.isbn)}" alt="Обложка" onerror="this.parentElement.innerHTML='<div class=&quot;cover-fallback&quot;><span class=&quot;cf-title&quot;>${esc(b.title)}</span></div>'"></div>
+        <div>
+          <div class="m-name" style="font-size:1.25rem">${esc(b.title)}</div>
+          <div class="m-sub">${esc(b.author)}</div>
+        </div>
+      </div>
+      <div class="shops">
+        <a class="shop" href="${amazon}" target="_blank" rel="noopener">Amazon <span class="go">открыть →</span></a>
+        <a class="shop" href="${bn}" target="_blank" rel="noopener">Barnes &amp; Noble <span class="go">открыть →</span></a>
+        <a class="shop" href="${bookshop}" target="_blank" rel="noopener">Bookshop.org <span class="go">открыть →</span></a>
+      </div>
+      <p class="m-note">ISBN ${b.isbn} · ссылки открываются в новой вкладке</p>
+    `);
+  }
+
+  // ===== Делегирование кликов и клавиатура =====
+  function handle(t){
+    const buy=t.closest("[data-buy]");
+    if(buy){ showBuy(+buy.dataset.buy); return; }
+    const au=t.closest("[data-author]");
+    if(au){ showAuthor(au.dataset.author); }
+  }
+  document.getElementById("list").addEventListener("click",e=>handle(e.target));
+  document.getElementById("list").addEventListener("keydown",e=>{
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); handle(e.target); }
+  });
+</script>
+</body>
+</html>
