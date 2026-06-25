@@ -229,6 +229,67 @@
     .thumb{width:52px;height:78px}
     .title .tag-buy{display:none}
   }
+
+  /* ===== Мини-игра: книжная викторина ===== */
+  .game{
+    max-width:680px;margin:8px auto 44px;padding:24px 22px;
+    background:linear-gradient(135deg, rgba(58,38,27,.86), rgba(34,22,16,.92));
+    border:1px solid rgba(127,209,189,.3);border-radius:18px;
+    box-shadow:0 14px 30px rgba(0,0,0,.4);
+  }
+  .game-head{text-align:center;margin-bottom:16px}
+  .game-eyebrow{
+    display:inline-block;letter-spacing:.2em;text-transform:uppercase;font-size:.7rem;
+    color:var(--mint);background:rgba(42,28,21,.55);border:1px solid rgba(127,209,189,.35);
+    padding:5px 14px;border-radius:999px;margin-bottom:10px;
+  }
+  .game-title{font-size:clamp(1.4rem,3.5vw,2rem);color:var(--cream)}
+  .game-title .accent{color:var(--mint)}
+  .game-screen{text-align:center}
+  .game-rules{color:#ecdfca;font-size:.95rem;max-width:520px;margin:0 auto 16px;line-height:1.55}
+  .game-rules b{color:var(--mint)}
+  .game-best{color:var(--gold);font-size:1rem;margin-bottom:16px}
+  .game-btn{
+    font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;
+    color:var(--cream);border:1px solid rgba(127,209,189,.4);border-radius:12px;
+    padding:12px 18px;transition:.15s;
+    background:linear-gradient(90deg, rgba(63,174,151,.25), rgba(63,174,151,.1));
+  }
+  .game-btn:hover{background:linear-gradient(90deg, rgba(63,174,151,.45), rgba(63,174,151,.18));transform:translateY(-2px)}
+  .game-btn-main{font-size:1.15rem;padding:14px 34px}
+  .game-bar-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;font-size:1rem}
+  .game-score{color:var(--mint);font-weight:700}
+  .game-time{color:var(--gold);font-weight:700}
+  .game-timerbar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:20px}
+  .game-timerbar > span{
+    display:block;height:100%;width:100%;border-radius:999px;
+    background:linear-gradient(90deg,var(--mint-deep),var(--mint));
+    box-shadow:0 0 10px rgba(127,209,189,.5);transition:width 1s linear;
+  }
+  .game-question{font-size:1.2rem;color:var(--cream);margin-bottom:18px;min-height:1.4em;line-height:1.4}
+  .game-question .q-book{color:var(--mint);font-style:italic}
+  .game-qcover{width:110px;height:165px;border-radius:6px;overflow:hidden;margin:14px auto 0;
+    box-shadow:0 8px 18px rgba(0,0,0,.5);background:#1c120c}
+  .game-qcover img{width:100%;height:100%;object-fit:cover;display:block}
+  .game-answers{display:grid;gap:10px;max-width:480px;margin:0 auto}
+  .game-answer{
+    font-family:inherit;font-size:1rem;cursor:pointer;text-align:left;
+    color:var(--cream);border:1px solid rgba(127,209,189,.35);border-radius:12px;padding:13px 16px;
+    background:linear-gradient(90deg, rgba(63,174,151,.18), rgba(63,174,151,.06));transition:.12s;
+  }
+  .game-answer:hover{background:linear-gradient(90deg, rgba(63,174,151,.35), rgba(63,174,151,.12));transform:translateX(3px)}
+  .game-answer:disabled{cursor:default;transform:none}
+  .game-answer.correct{background:linear-gradient(90deg, rgba(63,174,151,.65), rgba(63,174,151,.32));border-color:var(--mint)}
+  .game-answer.wrong{background:linear-gradient(90deg, rgba(180,70,60,.55), rgba(180,70,60,.25));border-color:#d77}
+  .game-final{font-size:1.3rem;color:var(--cream);margin-bottom:6px}
+  .game-final-score{font-size:1.7rem;color:var(--mint);font-weight:800;margin-bottom:12px}
+  .game-newrecord{color:var(--gold);font-size:1.05rem;margin-bottom:14px;font-weight:700}
+
+  @media (max-width:520px){
+    .game{padding:18px 14px}
+    .game-question{font-size:1.05rem}
+    .game-answer{font-size:.92rem;padding:11px 13px}
+  }
 </style>
 </head>
 <body>
@@ -254,6 +315,45 @@
       </div>
     </div>
   </header>
+
+  <!-- ===== Мини-игра: книжная викторина ===== -->
+  <section id="game" class="game" aria-label="Книжная викторина">
+    <div class="game-head">
+      <span class="game-eyebrow">🎮 Мини-игра</span>
+      <h2 class="game-title">Книжная викторина <span class="accent">за 30 секунд</span></h2>
+    </div>
+
+    <!-- Старт -->
+    <div id="gameStart" class="game-screen">
+      <p class="game-rules">
+        Отвечай как можно быстрее! Вопросы вперемешку: угадай <b>автора</b>,
+        книгу <b>по обложке</b> и какая книга <b>продалась бóльшим тиражом</b>.
+        За 30 секунд набери максимум очков.
+      </p>
+      <p class="game-best">🏆 Рекорд: <span id="bestScore">0</span></p>
+      <button id="startBtn" class="game-btn game-btn-main">Старт ▶</button>
+    </div>
+
+    <!-- Игра -->
+    <div id="gamePlay" class="game-screen" hidden>
+      <div class="game-bar-row">
+        <span class="game-score">Счёт: <span id="score">0</span></span>
+        <span class="game-time">⏱ <span id="timer">30</span> с</span>
+      </div>
+      <div class="game-timerbar"><span id="timerBar"></span></div>
+      <div id="question" class="game-question"></div>
+      <div id="answers" class="game-answers"></div>
+    </div>
+
+    <!-- Итог -->
+    <div id="gameEnd" class="game-screen" hidden>
+      <p class="game-final">Время вышло!</p>
+      <p class="game-final-score">Твой счёт: <span id="finalScore">0</span></p>
+      <p class="game-best">🏆 Рекорд: <span id="bestScoreEnd">0</span></p>
+      <p id="newRecord" class="game-newrecord" hidden>🎉 Новый рекорд!</p>
+      <button id="againBtn" class="game-btn game-btn-main">Играть снова ↻</button>
+    </div>
+  </section>
 
   <main id="list"></main>
 
@@ -405,6 +505,138 @@
   document.getElementById("list").addEventListener("keydown",e=>{
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); handle(e.target); }
   });
+
+  // ===== Мини-игра: книжная викторина (30 сек) =====
+  (function(){
+    // Доп. банк книг (title, author, isbn) — расширяет пул вопросов «автор» и «обложка»
+    const extraBooks = [
+      {title:"Harry Potter and the Sorcerer's Stone", author:"J.K. Rowling", isbn:"9780590353427"},
+      {title:"The Hobbit", author:"J.R.R. Tolkien", isbn:"9780547928227"},
+      {title:"1984", author:"George Orwell", isbn:"9780451524935"},
+      {title:"To Kill a Mockingbird", author:"Harper Lee", isbn:"9780061120084"},
+      {title:"The Great Gatsby", author:"F. Scott Fitzgerald", isbn:"9780743273565"},
+      {title:"Pride and Prejudice", author:"Jane Austen", isbn:"9780141439518"},
+      {title:"The Alchemist", author:"Paulo Coelho", isbn:"9780062315007"},
+      {title:"It Ends with Us", author:"Colleen Hoover", isbn:"9781501110368"},
+      {title:"A Game of Thrones", author:"George R.R. Martin", isbn:"9780553593716"},
+      {title:"The Catcher in the Rye", author:"J.D. Salinger", isbn:"9780316769488"},
+    ];
+    const pool = [...books, ...extraBooks];   // для вопросов «автор» и «обложка»
+    const salesBooks = books;                 // для вопроса «тиражи» (есть поле copies)
+
+    const $ = id => document.getElementById(id);
+    const elStart=$("gameStart"), elPlay=$("gamePlay"), elEnd=$("gameEnd"),
+          elScore=$("score"), elTimer=$("timer"), elTimerBar=$("timerBar"),
+          elQuestion=$("question"), elAnswers=$("answers"),
+          elBest=$("bestScore"), elBestEnd=$("bestScoreEnd"),
+          elFinal=$("finalScore"), elNewRecord=$("newRecord");
+
+    const ROUND=30, BEST_KEY="booksQuizBest";
+    let score=0, timeLeft=ROUND, timerId=null, locked=false;
+
+    const best=()=> +(localStorage.getItem(BEST_KEY)||0);
+    elBest.textContent=best();
+
+    const rnd=n=>Math.floor(Math.random()*n);
+    const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+    function pick(arr,n){                      // n случайных уникальных элементов из arr
+      const idx=shuffle([...arr.keys()]).slice(0,n);
+      return idx.map(i=>arr[i]);
+    }
+
+    function start(){
+      score=0; timeLeft=ROUND; locked=false;
+      elScore.textContent="0"; elTimer.textContent=ROUND;
+      elTimerBar.style.transition="none"; elTimerBar.style.width="100%";
+      void elTimerBar.offsetWidth;            // reflow, чтобы полоска поехала плавно
+      elTimerBar.style.transition="width 1s linear";
+      elStart.hidden=true; elEnd.hidden=true; elPlay.hidden=false;
+      nextQuestion();
+      timerId=setInterval(tick,1000);
+    }
+
+    function tick(){
+      timeLeft--;
+      elTimer.textContent=Math.max(timeLeft,0);
+      elTimerBar.style.width=(Math.max(timeLeft,0)/ROUND*100)+"%";
+      if(timeLeft<=0) end();
+    }
+
+    function end(){
+      clearInterval(timerId);
+      elPlay.hidden=true; elEnd.hidden=false;
+      elFinal.textContent=score;
+      if(score>best()){ localStorage.setItem(BEST_KEY,score); elNewRecord.hidden=false; }
+      else elNewRecord.hidden=true;
+      const b=best(); elBest.textContent=b; elBestEnd.textContent=b;
+    }
+
+    function nextQuestion(){
+      locked=false;
+      const type=rnd(3);                       // 0 — автор, 1 — обложка, 2 — тиражи
+      if(type===0) qAuthor();
+      else if(type===1) qCover();
+      else qSales();
+    }
+
+    // Отрисовать варианты-кнопки. isCorrect(item) → true для верного.
+    function renderChoices(items, isCorrect, label){
+      elAnswers.innerHTML="";
+      shuffle(items.slice()).forEach(it=>{
+        const btn=document.createElement("button");
+        btn.className="game-answer";
+        btn.innerHTML=label(it);
+        const ok=isCorrect(it);
+        if(ok) btn.dataset.correct="1";
+        btn.addEventListener("click",()=>answer(btn,ok));
+        elAnswers.appendChild(btn);
+      });
+    }
+
+    function qAuthor(){
+      const book=pool[rnd(pool.length)];
+      elQuestion.innerHTML=`Кто написал <span class="q-book">«${esc(book.title)}»</span>?`;
+      const others=[...new Set(pool.map(b=>b.author))].filter(a=>a!==book.author);
+      const opts=[book.author, ...shuffle(others).slice(0,3)];
+      renderChoices(opts, a=>a===book.author, a=>esc(a));
+    }
+
+    function qCover(){
+      const book=pool[rnd(pool.length)];
+      elQuestion.innerHTML=`Что это за книга?
+        <div class="game-qcover">
+          <img src="${coverURL(book.isbn)}" alt="Обложка книги"
+               onerror="this.parentElement.innerHTML='<div class=&quot;cover-fallback&quot;><span class=&quot;cf-title&quot;>?</span></div>'">
+        </div>`;
+      const others=[...new Set(pool.map(b=>b.title))].filter(t=>t!==book.title);
+      const opts=[book.title, ...shuffle(others).slice(0,3)];
+      renderChoices(opts, t=>t===book.title, t=>esc(t));
+    }
+
+    function qSales(){
+      const [a,b]=pick(salesBooks,2);
+      const winner = a.copies>b.copies ? a : b;
+      elQuestion.innerHTML=`Что продалось <b>бóльшим тиражом</b>?`;
+      renderChoices([a,b], x=>x===winner,
+        x=>`${esc(x.title)}<br><span style="opacity:.7;font-size:.85em">${esc(x.author)}</span>`);
+    }
+
+    function answer(btn, correct){
+      if(locked) return;
+      locked=true;
+      [...elAnswers.children].forEach(b=>b.disabled=true);
+      if(correct){ score++; elScore.textContent=score; btn.classList.add("correct"); }
+      else{
+        btn.classList.add("wrong");
+        const right=elAnswers.querySelector('[data-correct="1"]');
+        if(right) right.classList.add("correct");
+      }
+      setTimeout(()=>{ if(timeLeft>0) nextQuestion(); }, 450);
+    }
+
+    $("startBtn").addEventListener("click",start);
+    $("againBtn").addEventListener("click",start);
+  })();
 </script>
 </body>
 </html>
